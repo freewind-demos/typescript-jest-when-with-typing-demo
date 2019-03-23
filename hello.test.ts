@@ -1,10 +1,13 @@
-import {forEach} from './hello';
+import {fetchUsers, User} from "./users";
+import axios from 'axios';
+import MockInstance = jest.MockInstance;
 
-test('forEach mock', () => {
-  const callback = jest.fn(x => x + 100)
-  forEach([1, 2], callback);
+jest.mock('axios');
 
-  expect(callback.mock.calls.length).toBe(2);
-  expect(callback.mock.calls[0][0]).toBe(1);
-  expect(callback.mock.results[0].value).toBe(101);
+test('forEach mock', async () => {
+  const response = {data: [{name: 'jest'}]};
+  (axios.get as unknown as MockInstance<Promise<{ data: User[] }>, any>).mockResolvedValue(Promise.resolve(response))
+
+  const users = await fetchUsers()
+  expect(users).toEqual([{name: 'jest'}])
 })
