@@ -4,10 +4,13 @@ import MockInstance = jest.MockInstance;
 
 jest.mock('axios');
 
-test('forEach mock', async () => {
+test('module mock', async () => {
   const response = {data: [{name: 'jest'}]};
-  (axios.get as unknown as MockInstance<Promise<{ data: User[] }>, any>).mockResolvedValue(Promise.resolve(response))
+  const axiosMock = axios.get as unknown as MockInstance<Promise<{ data: User[] }>, any>;
+  axiosMock.mockResolvedValue(Promise.resolve(response))
 
   const users = await fetchUsers()
+
+  expect(axiosMock).toHaveBeenLastCalledWith('/users.json');
   expect(users).toEqual([{name: 'jest'}])
 })
