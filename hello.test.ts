@@ -1,16 +1,26 @@
-import {fetchUsers, User} from "./users";
-import axios from 'axios';
-import MockInstance = jest.MockInstance;
+import asMock from "./asMock";
+import decorate from './decorate';
+import hello from "./hello";
 
-jest.mock('axios');
+// Note: we just return a `jest.fn()` for the default exported function,
+// not `{ default: jest.fn() }`
+jest.mock('./decorate', () => jest.fn())
 
-test('module mock', async () => {
-  const response = {data: [{name: 'jest'}]};
-  const axiosMock = axios.get as unknown as MockInstance<Promise<{ data: User[] }>, any>;
-  axiosMock.mockResolvedValue(Promise.resolve(response))
+describe('mock test', () => {
+  const mockDecorate = asMock(decorate);
 
-  const users = await fetchUsers()
+  beforeEach(mockDecorate.mockClear);
 
-  expect(axiosMock).toHaveBeenLastCalledWith('/users.json');
-  expect(users).toEqual([{name: 'jest'}])
+  it('test1', () => {
+    mockDecorate.mockImplementation((s) => `[${s}]`)
+    expect(hello('aaa')).toEqual('Hello, [aaa]!')
+    expect(mockDecorate).toHaveBeenCalledWith('aaa')
+  })
+
+  it('test2', () => {
+    mockDecorate.mockImplementation((s) => `<${s}>`)
+    expect(hello('bbb')).toEqual('Hello, <bbb>!')
+    expect(mockDecorate).toHaveBeenCalledWith('bbb')
+  })
+
 })

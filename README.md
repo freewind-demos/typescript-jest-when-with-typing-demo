@@ -1,9 +1,29 @@
-TypeScript Jest Mock Modules Demo
-====================================
+TypeScript Jest Mock Module with Exported Default Function Demo
+=========================================================
 
-使用`jest.mock(moduleName)`。
+如果一个module定义类似于：
 
-注意：`jest.mock`要放在test的外面。放里面不生效。
+```
+export default function foo() {}
+```
+
+在jest中怎么来mock这个函数？
+
+经过测试，应该是:
+
+```
+jest.mock('./foo', () => jest.fn())
+```
+
+而不是我本来以为的：
+
+```
+jest.mock('./foo', () => ({
+  default: jest.fn()
+}))
+```
+
+再结合一个自定义的强转函数`asMock`，可以让我们得到一个强类型的mock，方便后面操作。
 
 ```
 npm install
