@@ -1,29 +1,7 @@
-TypeScript Jest Mock Module with Exported Default Function Demo
+TypeScript Jest "when" with Typing Demo
 =========================================================
 
-如果一个module定义类似于：
-
-```
-export default function foo() {}
-```
-
-在jest中怎么来mock这个函数？
-
-经过测试，应该是:
-
-```
-jest.mock('./foo', () => jest.fn())
-```
-
-而不是我本来以为的：
-
-```
-jest.mock('./foo', () => ({
-  default: jest.fn()
-}))
-```
-
-再结合一个自定义的强转函数`asMock`，可以让我们得到一个强类型的mock，方便后面操作。
+`jest-when`可以搭配jest中定义好的mock类型，如果类型不对，会编译报错。
 
 ```
 npm install
